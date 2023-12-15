@@ -9,7 +9,8 @@ namespace ProgramaABCC
 
         public Form1(Servicios servicios)
         {
-            InitializeComponent();
+            InitializeComponent(); 
+
             _servicios = servicios;
             buttonAlta.Enabled = false;
             buttonActualizar.Enabled = false;
