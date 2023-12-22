@@ -55,6 +55,7 @@ namespace ProgramaABCC
                 articulo = _servicios.Consultar(sku);
                 if (articulo != null)
                 {
+                    buttonAlta.Enabled = false;
                     textBoxArticulo.Text = articulo.Articulo1;
                     textBoxMarca.Text = articulo.Marca;
                     textBoxModelo.Text = articulo.Modelo;
@@ -112,17 +113,34 @@ namespace ProgramaABCC
 
         private void buttonAlta_Click(object sender, EventArgs e)
         {
-            int sku = Convert.ToInt32(textBoxSku.Text);
-            string articulo1 = textBoxArticulo.Text;
-            string marca = textBoxMarca.Text;
-            string modelo = textBoxModelo.Text;
-            int departamento = Convert.ToInt32(comboBoxDepartamento.Text);
-            int clase = Convert.ToInt32(comboBoxClase.Text);
-            int familia = Convert.ToInt32(comboBoxFamilia.Text);
-            int stock = Convert.ToInt32(textBoxStock.Text);
-            int cantidad = Convert.ToInt32(textBoxCantidad.Text);
+            if (ValidarArticulo())
+            {
+                if (ValidarStock())
+                {
+                    int sku = Convert.ToInt32(textBoxSku.Text);
+                    string articulo1 = textBoxArticulo.Text;
+                    string marca = textBoxMarca.Text;
+                    string modelo = textBoxModelo.Text;
+                    int departamento = Convert.ToInt32(comboBoxDepartamento.Text);
+                    int clase = Convert.ToInt32(comboBoxClase.Text);
+                    int familia = Convert.ToInt32(comboBoxFamilia.Text);
+                    int stock = Convert.ToInt32(textBoxStock.Text);
+                    int cantidad = Convert.ToInt32(textBoxCantidad.Text);
 
-            _servicios.Alta(sku, articulo1, marca, modelo, departamento, clase, familia, stock, cantidad);            
+                    _servicios.Alta(sku, articulo1, marca, modelo, departamento, clase, familia, stock, cantidad);
+                }
+                else
+                {
+                    MessageBox.Show("La cantidad no puede ser mayor al Stock!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+
+            }
+            else
+            {
+                MessageBox.Show("Todos los campos deben ser cubiertos", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+
+                        
 
         }
 
@@ -197,25 +215,39 @@ namespace ProgramaABCC
 
         private void buttonActualizar_Click(object sender, EventArgs e)
         {
-            var confirmar = MessageBox.Show("¿Confirma la actualización del artículo?", "Confirmar", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-
-            if (confirmar == DialogResult.Yes)
+            if (ValidarArticulo())
             {
+                if(ValidarStock())
+                {
+                    var confirmar = MessageBox.Show("¿Confirma la actualización del artículo?", "Confirmar", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
-                int sku = Convert.ToInt32(textBoxSku.Text);
-                string articulo1 = textBoxArticulo.Text;
-                string marca = textBoxMarca.Text;
-                string modelo = textBoxModelo.Text;
-                int departamento = Convert.ToInt32(comboBoxDepartamento.Text);
-                int clase = Convert.ToInt32(comboBoxClase.Text);
-                int familia = Convert.ToInt32(comboBoxFamilia.Text);
-                int stock = Convert.ToInt32(textBoxStock.Text);
-                int cantidad = Convert.ToInt32(textBoxCantidad.Text);
-                int descontinuado = Convert.ToInt32(checkBoxDescontinuado.Checked);
+                    if (confirmar == DialogResult.Yes)
+                    {
 
-                _servicios.Actualizar(sku, articulo1, marca, modelo, departamento, clase, familia, stock, cantidad, descontinuado);
+                        int sku = Convert.ToInt32(textBoxSku.Text);
+                        string articulo1 = textBoxArticulo.Text;
+                        string marca = textBoxMarca.Text;
+                        string modelo = textBoxModelo.Text;
+                        int departamento = Convert.ToInt32(comboBoxDepartamento.Text);
+                        int clase = Convert.ToInt32(comboBoxClase.Text);
+                        int familia = Convert.ToInt32(comboBoxFamilia.Text);
+                        int stock = Convert.ToInt32(textBoxStock.Text);
+                        int cantidad = Convert.ToInt32(textBoxCantidad.Text);
+                        int descontinuado = Convert.ToInt32(checkBoxDescontinuado.Checked);
+
+                        _servicios.Actualizar(sku, articulo1, marca, modelo, departamento, clase, familia, stock, cantidad, descontinuado);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("La cantidad no puede ser mayor al Stock!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+
             }
-
+            else
+            {
+                MessageBox.Show("Todos los campos deben ser cubiertos", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
         }
 
         private void buttonBorrar_Click(object sender, EventArgs e)
@@ -247,6 +279,25 @@ namespace ProgramaABCC
 
             
 
+        }
+
+        private bool ValidarArticulo()
+        {
+            return !string.IsNullOrEmpty(textBoxSku.Text) &&
+                   !string.IsNullOrEmpty(textBoxArticulo.Text) &&
+                   !string.IsNullOrEmpty(textBoxModelo.Text) &&
+                   comboBoxDepartamento.SelectedItem != null &&
+                   comboBoxClase.SelectedItem != null &&
+                   comboBoxFamilia.SelectedItem != null &&
+                   !string.IsNullOrEmpty(textBoxStock.Text) &&
+                   !string.IsNullOrEmpty(textBoxCantidad.Text);
+        }
+
+        private bool ValidarStock()
+        {
+            return Convert.ToInt32(textBoxStock.Text) >= Convert.ToInt32(textBoxCantidad.Text) &&
+                Convert.ToInt32(textBoxStock.Text) >= 0
+                && Convert.ToInt32(textBoxCantidad.Text) >= 0;
         }
     }
 }
