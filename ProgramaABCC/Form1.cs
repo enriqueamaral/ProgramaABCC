@@ -9,7 +9,7 @@ namespace ProgramaABCC
 
         public Form1(Servicios servicios)
         {
-            InitializeComponent(); 
+            InitializeComponent();
 
             _servicios = servicios;
             buttonAlta.Enabled = false;
@@ -66,6 +66,7 @@ namespace ProgramaABCC
                     textBoxCantidad.Text = articulo.Cantidad.ToString();
                     dateTimePickerFechaAlta.Text = articulo.FechaAlta.ToString();
                     dateTimePickerFechaBaja.Text = articulo.FechaBaja.ToString();
+                    checkBoxDescontinuado.Checked = articulo.Descontinuado == 1 ? true : false;
 
                     buttonActualizar.Enabled = true;
                     buttonBorrar.Enabled = true;
@@ -128,6 +129,8 @@ namespace ProgramaABCC
                     int cantidad = Convert.ToInt32(textBoxCantidad.Text);
 
                     _servicios.Alta(sku, articulo1, marca, modelo, departamento, clase, familia, stock, cantidad);
+
+                    MessageBox.Show("El articulo se ha dado de alta correctamente!", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 else
                 {
@@ -140,7 +143,7 @@ namespace ProgramaABCC
                 MessageBox.Show("Todos los campos deben ser cubiertos", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
 
-                        
+
 
         }
 
@@ -217,7 +220,7 @@ namespace ProgramaABCC
         {
             if (ValidarArticulo())
             {
-                if(ValidarStock())
+                if (ValidarStock())
                 {
                     var confirmar = MessageBox.Show("¿Confirma la actualización del artículo?", "Confirmar", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
@@ -277,7 +280,7 @@ namespace ProgramaABCC
 
             }
 
-            
+
 
         }
 
@@ -285,6 +288,7 @@ namespace ProgramaABCC
         {
             return !string.IsNullOrEmpty(textBoxSku.Text) &&
                    !string.IsNullOrEmpty(textBoxArticulo.Text) &&
+                   !string.IsNullOrEmpty(textBoxMarca.Text) &&
                    !string.IsNullOrEmpty(textBoxModelo.Text) &&
                    comboBoxDepartamento.SelectedItem != null &&
                    comboBoxClase.SelectedItem != null &&
@@ -298,6 +302,34 @@ namespace ProgramaABCC
             return Convert.ToInt32(textBoxStock.Text) >= Convert.ToInt32(textBoxCantidad.Text) &&
                 Convert.ToInt32(textBoxStock.Text) >= 0
                 && Convert.ToInt32(textBoxCantidad.Text) >= 0;
+        }
+
+        private void textBoxSku_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            // Verificar si la tecla presionada es un dígito o la tecla de retroceso
+            if (!char.IsDigit(e.KeyChar) && e.KeyChar != (char)Keys.Back)
+            {
+                // Si no es un dígito o retroceso, suprime la tecla
+                e.Handled = true;
+            }
+        }
+
+        private void textBoxStock_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsDigit(e.KeyChar) && e.KeyChar != (char)Keys.Back)
+            {
+                // Si no es un dígito o retroceso, suprime la tecla
+                e.Handled = true;
+            }
+        }
+
+        private void textBoxCantidad_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsDigit(e.KeyChar) && e.KeyChar != (char)Keys.Back)
+            {
+                // Si no es un dígito o retroceso, suprime la tecla
+                e.Handled = true;
+            }
         }
     }
 }

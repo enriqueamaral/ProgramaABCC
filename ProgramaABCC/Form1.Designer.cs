@@ -174,6 +174,7 @@
             textBoxSku.Name = "textBoxSku";
             textBoxSku.Size = new Size(172, 23);
             textBoxSku.TabIndex = 12;
+            textBoxSku.KeyPress += textBoxSku_KeyPress;
             // 
             // textBoxArticulo
             // 
@@ -202,6 +203,7 @@
             textBoxStock.Name = "textBoxStock";
             textBoxStock.Size = new Size(172, 23);
             textBoxStock.TabIndex = 19;
+            textBoxStock.KeyPress += textBoxStock_KeyPress;
             // 
             // textBoxCantidad
             // 
@@ -209,6 +211,7 @@
             textBoxCantidad.Name = "textBoxCantidad";
             textBoxCantidad.Size = new Size(146, 23);
             textBoxCantidad.TabIndex = 20;
+            textBoxCantidad.KeyPress += textBoxCantidad_KeyPress;
             // 
             // dateTimePickerFechaAlta
             // 
